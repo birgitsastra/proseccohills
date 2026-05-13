@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prosecco Mädelstrip · Travelbook 🥂</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #2D4A1E;
+  --green-light: #4A7B35;
+  --gold: #C9A84C;
+  --gold-light: #F7F0DC;
+  --cream: #F9F7F2;
+  --border: #E8E0D0;
+  --text: #2C2C2C;
+  --muted: #888;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; }
+.page { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+/* ── HERO COVER ─────────────────────────────────────── */
+.hero {
+  position: relative; height: 520px; border-radius: 0 0 20px 20px;
+  overflow: hidden; margin: 0 -1.5rem 2.5rem; background: var(--green);
+}
+.hero-img {
+  width: 100%; height: 100%; object-fit: cover; opacity: 0.55;
+  transition: opacity 0.5s;
+}
+.hero-img.loaded { opacity: 0.55; }
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(20,40,10,0.2) 0%, rgba(20,40,10,0.75) 100%);
+}
+.hero-content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 2.5rem 2.5rem 2.5rem;
+}
+.hero-tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem; font-family: 'Inter'; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: 52px; color: white; line-height: 1.1; margin-bottom: 0.4rem; }
+.hero-subtitle { font-size: 16px; color: rgba(255,255,255,0.75); margin-bottom: 0.3rem; }
+.hero-dates { font-size: 13px; color: var(--gold); margin-bottom: 1.5rem; }
+.hero-divider { height: 1px; background: rgba(201,168,76,0.4); margin: 1.2rem 0; max-width: 480px; }
+.hero-meta { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+.hero-meta-label { font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; }
+.hero-meta-value { font-size: 13px; color: white; margin-top: 2px; }
+
+/* ── NAVIGATION ─────────────────────────────────────── */
+.nav-wrap { position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--border); margin: 0 -1.5rem; padding: 0 1.5rem; }
+.nav { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav-btn {
+  padding: 14px 18px; border: none; background: none; font-size: 13px; font-weight: 500;
+  cursor: pointer; color: var(--muted); border-bottom: 2.5px solid transparent;
+  white-space: nowrap; transition: all 0.15s; font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--green); border-bottom-color: var(--gold); }
+
+/* ── SECTIONS ───────────────────────────────────────── */
+.section { display: none; padding-top: 2rem; }
+.section.active { display: block; }
+
+/* ── PAGE HEADER ────────────────────────────────────── */
+.page-header { margin-bottom: 2rem; }
+.page-header-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.page-header-title { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--green); line-height: 1.2; }
+.page-header-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.page-header-divider { height: 2px; background: linear-gradient(to right, var(--gold), transparent); margin-top: 1rem; }
+
+/* ── PHOTO SECTION ──────────────────────────────────── */
+.photo-hero { width: 100%; height: 320px; object-fit: cover; border-radius: 14px; margin-bottom: 1.5rem; display: block; background: #c8d8b8; }
+.photo-caption { font-size: 11px; color: var(--muted); text-align: center; margin-top: -1rem; margin-bottom: 1.5rem; font-style: italic; }
+.photo-grid { display: grid; gap: 8px; margin-bottom: 1.5rem; }
+.photo-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.photo-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.photo-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; display: block; background: #c8d8b8; }
+@media (max-width: 580px) { .photo-grid.cols-3 { grid-template-columns: 1fr 1fr; } }
+
+/* ── OVERVIEW GRID ──────────────────────────────────── */
+.ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+@media (max-width: 540px) { .ov-grid { grid-template-columns: 1fr; } }
+.ov-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.25rem; border-left: 4px solid var(--gold); }
+.ov-card.green-accent { border-left-color: var(--green-light); }
+.ov-card-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+.ov-card-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+.ov-card-text { font-size: 12px; color: #666; line-height: 1.55; }
+
+/* ── BOOKED BADGE ───────────────────────────────────── */
+.badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; vertical-align: middle; margin-left: 5px; }
+.badge-booked { background: #EAF3DE; color: #1E6A1E; }
+.badge-time { background: #FFF3CD; color: #856404; }
+
+/* ── ROUTE BOX ──────────────────────────────────────── */
+.route-box { background: var(--gold-light); border: 1px solid #D4B86A; border-radius: 14px; padding: 1.4rem; margin-bottom: 1.5rem; }
+.route-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1rem; }
+@media (max-width: 500px) { .route-stats { grid-template-columns: repeat(2, 1fr); } }
+.rs-value { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--green); }
+.rs-label { font-size: 11px; color: #7A8C6A; margin-top: 1px; }
+.route-divider { height: 1px; background: #D4B86A; margin: 1rem 0; }
+.route-desc { font-size: 13px; color: #4A5C3A; line-height: 1.7; }
+.route-chart { height: 110px; margin-top: 1rem; position: relative; }
+.route-chart canvas { width: 100% !important; height: 110px !important; }
+.diff-easy { color: #1E7A3E; font-weight: 600; }
+.diff-med { color: #9A6200; font-weight: 600; }
+
+/* ── ROUTE WAYPOINTS ────────────────────────────────── */
+.route-waypoints { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin: 0.75rem 0; }
+.wp { padding: 4px 11px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.wp-start { background: var(--green); color: white; }
+.wp-mid { background: white; border: 1px solid var(--border); color: var(--text); }
+.wp-winery { background: #FFF8E8; border: 1px solid #D4B86A; color: #7A5A10; }
+.wp-highlight { background: #E8F0FF; border: 1px solid #A0B8E8; color: #2A4A8A; }
+.wp-arrow { color: var(--gold); font-size: 13px; }
+
+/* ── TIMELINE ───────────────────────────────────────── */
+.timeline { position: relative; padding-left: 30px; }
+.timeline::before { content: ''; position: absolute; left: 9px; top: 8px; bottom: 8px; width: 1.5px; background: #E0D8C8; }
+.stop { position: relative; margin-bottom: 1.6rem; }
+.stop::before {
+  content: ''; position: absolute; left: -25px; top: 4px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--gold); border: 2.5px solid var(--cream);
+  box-shadow: 0 0 0 1.5px var(--gold);
+}
+.stop.green::before { background: var(--green-light); box-shadow: 0 0 0 1.5px var(--green-light); }
+.stop.wine::before { background: #8B2A8B; box-shadow: 0 0 0 1.5px #8B2A8B; }
+.stop.blue::before { background: #2A6496; box-shadow: 0 0 0 1.5px #2A6496; }
+.stop-time { font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 0.3px; margin-bottom: 2px; }
+.stop-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+.stop-desc { font-size: 13px; color: #555; line-height: 1.65; }
+.stop-link { font-size: 11px; color: #2A6496; text-decoration: none; display: inline-block; margin-top: 5px; }
+.stop-link:hover { text-decoration: underline; }
+.stop-meta { font-size: 11px; color: #999; margin-top: 3px; }
+.stop-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-top: 0.6rem; display: block; background: #c8d8b8; }
+
+/* ── HIGHLIGHT CARDS ────────────────────────────────── */
+.highlights { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+@media (max-width: 540px) { .highlights { grid-template-columns: 1fr; } }
+.hl-card { background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.hl-img { width: 100%; height: 120px; object-fit: cover; display: block; background: #c8d8b8; }
+.hl-body { padding: 0.75rem; }
+.hl-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.hl-text { font-size: 12px; color: #666; line-height: 1.5; }
+
+/* ── TIP BOXES ──────────────────────────────────────── */
+.tip { border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 0.85rem 1rem; font-size: 13px; line-height: 1.65; margin-bottom: 1.2rem; background: #EAF3DE; color: #1E3A10; }
+.tip-wine { background: #FDF0FF; border-left-color: #8B2A8B; color: #3A0A3A; }
+.tip-info { background: #EEF4FF; border-left-color: #2A6496; color: #0A2A4A; }
+.tip-warm { background: #FFF8E8; border-left-color: var(--gold); color: #4A3A0A; }
+
+/* ── CARDS ──────────────────────────────────────────── */
+.card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.card-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+.card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.card-text { font-size: 13px; color: #666; line-height: 1.6; }
+.card-link { font-size: 12px; color: #2A6496; text-decoration: none; display: flex; align-items: center; gap: 5px; margin-top: 8px; }
+.card-link:hover { text-decoration: underline; }
+
+/* ── TABLE ──────────────────────────────────────────── */
+.tbl-wrap { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 1rem; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { background: var(--green); color: white; padding: 10px 13px; text-align: left; font-weight: 500; font-size: 12px; }
+.tbl td { padding: 9px 13px; border-bottom: 1px solid #F0E8D8; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:nth-child(even) td { background: #FAF7F0; }
+.status-ok { color: #1E7A3E; font-weight: 600; }
+.status-call { color: #9A6200; font-weight: 600; }
+
+/* ── FOOTER ─────────────────────────────────────────── */
+.footer { text-align: center; padding: 3rem 0 0; margin-top: 1.5rem; border-top: 1px solid var(--border); }
+.footer-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); margin-bottom: 0.4rem; }
+.footer-text { font-size: 13px; color: var(--muted); line-height: 1.9; }
+.footer-small { font-size: 11px; color: #bbb; margin-top: 0.5rem; }
+
+/* ── SECTION LABEL ──────────────────────────────────── */
+.section-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin: 1.5rem 0 0.75rem; }
+
+/* ── LINKS ──────────────────────────────────────────── */
+.link-list { display: flex; flex-direction: column; gap: 8px; }
+
+@media (max-width: 640px) {
+  .hero-title { font-size: 36px; }
+  .hero-content { padding: 1.5rem; }
+  .hero { height: 420px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO COVER -->
+<div class="hero">
+  <img class="hero-img" 
+       src="https://images.unsplash.com/photo-1555990793-da11153b9a6b?auto=format&fit=crop&w=1600&q=80"
+       alt="Prosecco Hügel UNESCO Veneto"
+       onload="this.classList.add('loaded')"
+       onerror="this.style.opacity='0'">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Reisegeschenk · 50. Geburtstag 🎉</div>
+    <div class="hero-title">Prosecco<br>Mädelstrip</div>
+    <div class="hero-subtitle">Strada del Prosecco · Refrontolo, Veneto</div>
+    <div class="hero-dates">21. – 25. Mai 2025</div>
+    <div class="hero-divider"></div>
+    <div class="hero-meta">
+      <div><div class="hero-meta-label">Unterkunft</div><div class="hero-meta-value">Via Vittoria 46, Refrontolo</div></div>
+      <div><div class="hero-meta-label">Region</div><div class="hero-meta-value">UNESCO Colline del Prosecco</div></div>
+      <div><div class="hero-meta-label">Anreise</div><div class="hero-meta-value">Linz, Österreich</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <div class="nav">
+    <button class="nav-btn active" onclick="show('overview')">Überblick</button>
+    <button class="nav-btn" onclick="show('day1')">Do. 21. Mai</button>
+    <button class="nav-btn" onclick="show('day2')">Fr. 22. Mai</button>
+    <button class="nav-btn" onclick="show('day3')">Sa. 23. Mai</button>
+    <button class="nav-btn" onclick="show('day4')">So. 24. Mai</button>
+    <button class="nav-btn" onclick="show('reservations')">Reservierungen</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ OVERVIEW ════ -->
+<div class="section active" id="overview">
+  <div class="page-header">
+    <div class="page-header-label">Euer Trip auf einen Blick</div>
+    <div class="page-header-title">Reiseübersicht</div>
+    <div class="page-header-divider"></div>
+  </div>
+
+  <div class="ov-grid">
+    <div class="ov-card">
+      <div class="ov-card-label">Donnerstag · 21. Mai</div>
+      <div class="ov-card-title">Anreise & erster Abend</div>
+      <div class="ov-card-text">Prosciutto-Verkostung San Daniele <span class="badge badge-booked">✓ 12:30 Uhr</span><br>Ankunft Refrontolo · Jause im Garten</div>
+    </div>
+    <div class="ov-card green-accent">
+      <div class="ov-card-label">Freitag · 22. Mai</div>
+      <div class="ov-card-title">E-Bike Rundkurs UNESCO-Weinberge</div>
+      <div class="ov-card-text"><span class="badge badge-booked">✓ E-Bikes gebucht</span><br>Refrontolo → Valdobbiadene → Rolle → zurück · ~55 km</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-label">Samstag · 23. Mai</div>
+      <div class="ov-card-title">Wanderung Proseccostraße & Toffoli</div>
+      <div class="ov-card-text">Wanderung durch UNESCO-Weinberge · Weinstops · Kellerführung <span class="badge badge-booked">✓ 15:00 Uhr</span></div>
+    </div>
+    <div class="ov-card green-accent">
+      <div class="ov-card-label">Sonntag · 24. Mai</div>
+      <div class="ov-card-title">Cison di Valmarino & letzter Abend</div>
+      <div class="ov-card-text">Via dei Mulini · mittelalterliches Dorf · Pizza & Abschluss im Garten</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="margin-bottom:0.75rem;">Eure Routen im Überblick</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Route</th><th>Distanz</th><th>Hm</th><th>Dauer</th><th>Schwierigkeit</th></tr></thead>
+        <tbody>
+          <tr><td>🚲 E-Bike Rundkurs</td><td>~55 km</td><td>~750 m</td><td>Ganztags</td><td class="diff-med">Moderat</td></tr>
+          <tr><td>🌿 Wanderung Proseccostr. + Toffoli</td><td>~11 km</td><td>~320 m</td><td>3–4 Std.</td><td class="diff-med">Mittel</td></tr>
+          <tr><td>🏛 Via dei Mulini Cison</td><td>6,1 km</td><td>247 m</td><td>2–2,5 Std.</td><td class="diff-easy">Leicht</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tip tip-info">💡 <strong>Die Region:</strong> Die Colline del Prosecco di Conegliano e Valdobbiadene sind seit 2019 <strong>UNESCO-Welterbe</strong> – die erste Weinstraße Italiens, gegründet 1966. Die steilen Hänge mit den charakteristischen Ciglioni-Terrassen werden noch vollständig von Hand bewirtschaftet und schaffen eine einzigartige Kulturlandschaft.</div>
+
+  <div class="photo-grid cols-3">
+    <img src="https://images.unsplash.com/photo-1555990793-da11153b9a6b?auto=format&fit=crop&w=600&q=80" alt="Prosecco Hügel" loading="lazy">
+    <img src="https://images.unsplash.com/photo-1567521464027-f127ff144326?auto=format&fit=crop&w=600&q=80" alt="Weinkeller" loading="lazy">
+    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80" alt="E-Bike Weinberge" loading="lazy">
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════ DAY 1 ════ -->
+<div class="section" id="day1">
+  <div class="page-header">
+    <div class="page-header-label">Tag 1 · Donnerstag, 21. Mai</div>
+    <div class="page-header-title">Anreise & erster Abend</div>
+    <div class="page-header-sub">San Daniele del Friuli → Refrontolo</div>
+    <div class="page-header-divider"></div>
+  </div>
+
+  <img class="photo-hero"
+       src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80"
+       alt="Prosciutto di San Daniele" loading="lazy">
+  <p class="photo-caption">Prosciutto di San Daniele – luftgetrocknet im einzigartigen Mikroklima des Tagliamento-Tals</p>
+
+  <div class="tip tip-info">🚗 <strong>Abfahrt Linz empfohlen: 7:00–7:30 Uhr</strong><br>Route: A1 → Salzburg → A8 → A10 → Villach → A23 → San Daniele (ca. 310 km · 3,5 Std. Fahrzeit). Mit einem Kaffeestopp auf der Raststätte bei Villach (nach ca. 1,5 Std.) kommt ihr entspannt gegen 11:30 Uhr in San Daniele an und habt Zeit für einen Spaziergang vor der Verkostung um 12:30 Uhr. Für 5 Personen ggf. zwei Autos einplanen oder rechtzeitig prüfen ob ein Minivan passt!</div>
+
+  <div class="timeline">
+    <div class="stop blue">
+      <div class="stop-time">~7:00–7:30 Uhr · Abfahrt Linz</div>
+      <div class="stop-name">Aufbruch! 🎉</div>
+      <div class="stop-desc">Der Trip beginnt schon im Auto. Playlist vorbereiten, Snacks einpacken, gute Laune mitbringen. Der erste Stopp folgt nach ca. 1,5 Std. auf der Raststätte bei Villach oder Spittal für Kaffee & Cornetto.</div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~11:30 Uhr · Ankunft San Daniele del Friuli</div>
+      <div class="stop-name">Spaziergang durch San Daniele</div>
+      <div class="stop-desc">Das historische Hügelstädtchen mit mittelalterlichem Kern und Blick über den Tagliamento ist wunderschön. 30 Minuten für einen Espresso auf der Piazza Vittoria – und schon riecht man den Prosciutto in der Luft.</div>
+    </div>
+
+    <div class="stop green">
+      <div class="stop-time">12:30 Uhr · <span class="badge badge-booked">✓ Gebucht</span></div>
+      <div class="stop-name">La Casa del Prosciutto „Alberti 1906"</div>
+      <div class="stop-desc">Seit 1906 in Familienhand – eine der bekanntesten Prosciutto-Adressen San Danieles. Die Verkostung führt durch verschiedene Reifestufen von 12 bis 24 Monaten: der Unterschied zwischen frischem und gereiftem Prosciutto ist sofort spürbar. Das besondere Mikroklima des Tagliamento-Tals – Bergwind trifft Meeresluft – macht den San Daniele unverwechselbar. <strong>Unbedingt eine ganze Keule oder mehrere Pakete für den Abschlussabend kaufen!</strong></div>
+      <a class="stop-link" href="https://maps.google.com/?q=La+Casa+del+Prosciutto+Alberti+1906+San+Daniele+del+Friuli">📍 Via Teobaldo Ciconi 24, San Daniele → Google Maps</a>
+      <div class="stop-meta">+39 0432 957422 · Reservierung 12:30 Uhr bestätigt</div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~14:00 Uhr · Weiterfahrt</div>
+      <div class="stop-name">Richtung Refrontolo · ~1,5 Std.</div>
+      <div class="stop-desc">Via A23 → A4 → A27, Ausfahrt Vittorio Veneto Süd. Die letzten 20 Minuten auf der SS635 durch die ersten Weinbergterrassen sind bereits ein Vorgeschmack auf die kommenden Tage.</div>
+    </div>
+
+    <div class="stop green">
+      <div class="stop-time">~15:30–16:00 Uhr · Ankunft</div>
+      <div class="stop-name">Unterkunft · Via Vittoria 46, Refrontolo</div>
+      <div class="stop-desc">Zimmer beziehen, Gepäck verstauen, den Garten erkunden. Refrontolo liegt mitten in den UNESCO-Weinbergen – die ersten Rebzeilen beginnen buchstäblich hinter dem Gartentor.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Via+Vittoria+46,+31020+Refrontolo+TV">📍 Via Vittoria 46, Refrontolo → Google Maps</a>
+    </div>
+
+    <div class="stop wine">
+      <div class="stop-time">Ab ~18:00 Uhr</div>
+      <div class="stop-name">🥂 Erster Abend im Garten</div>
+      <div class="stop-desc">Kein Plan, kein Zeitdruck – einfach ankommen. Prosciutto aus San Daniele, lokaler Käse, frisches Brot und ein kühler Prosecco im Garten. Die Weinberge ringsum, die Stille des Dorfes. Prost auf den Geburtstag und die gemeinsame Reise!</div>
+    </div>
+  </div>
+
+  <div class="tip">🌙 Wer abends noch ausgehen möchte: <strong>BuonGustaio</strong> in Refrontolo hat auch donnerstags offen – gemütlich, lokal, kein Tourismus.</div>
+</div>
+
+<!-- ═════════════════════════════════════ DAY 2 ════ -->
+<div class="section" id="day2">
+  <div class="page-header">
+    <div class="page-header-label">Tag 2 · Freitag, 22. Mai · E-Bikes gebucht ✓</div>
+    <div class="page-header-title">E-Bike Rundkurs durch die UNESCO-Weinberge</div>
+    <div class="page-header-sub">~55 km · Start & Ziel: Hotel · nur Nebenstraßen & Weinbergwege</div>
+    <div class="page-header-divider"></div>
+  </div>
+
+  <img class="photo-hero"
+       src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80"
+       alt="E-Bike durch die Weinberge" loading="lazy">
+  <p class="photo-caption">E-Bike durch die UNESCO-Prosecco-Hügel – eine der schönsten Radregionen Italiens</p>
+
+  <div class="route-box">
+    <div class="card-label" style="margin-bottom:0.75rem;">Routenprofil – E-Bike Rundkurs Proseccostraße</div>
+    <div class="route-stats">
+      <div><div class="rs-value">~55 km</div><div class="rs-label">Rundkurs</div></div>
+      <div><div class="rs-value">~750 m</div><div class="rs-label">Höhenmeter</div></div>
+      <div><div class="rs-value">Ganztags</div><div class="rs-label">inkl. Stops</div></div>
+      <div><div class="rs-value diff-med">Moderat</div><div class="rs-label">mit E-Bike gut machbar</div></div>
+    </div>
+    <div class="route-divider"></div>
+    <div class="route-waypoints">
+      <span class="wp wp-start">🏠 Refrontolo</span><span class="wp-arrow">→</span>
+      <span class="wp wp-mid">Pieve di Soligo</span><span class="wp-arrow">→</span>
+      <span class="wp wp-mid">Soligo</span><span class="wp-arrow">→</span>
+      <span class="wp wp-winery">🍾 Farra di Soligo</span><span class="wp-arrow">→</span>
+      <span class="wp wp-winery">🍾 Col San Martino</span><span class="wp-arrow">→</span>
+      <span class="wp wp-mid">Valdobbiadene</span><span class="wp-arrow">→</span>
+      <span class="wp wp-highlight">★ Guia/Cartizze</span><span class="wp-arrow">→</span>
+      <span class="wp wp-mid">Campea</span><span class="wp-arrow">→</span>
+      <span class="wp wp-highlight">★ Rolle</span><span class="wp-arrow">→</span>
+      <span class="wp wp-mid">Lierza-Tal</span><span class="wp-arrow">→</span>
+      <span class="wp wp-start">🏠 Refrontolo</span>
+    </div>
+    <div class="route-divider"></div>
+    <div class="route-chart"><canvas id="ec1" role="img" aria-label="Höhenprofil E-Bike Tour"></canvas></div>
+    <div class="route-divider"></div>
+    <div class="route-desc">
+      <strong>Vollständiger Rundkurs – Start &amp; Ziel beim Hotel, kein Auto nötig.</strong> Die Route folgt der historischen Strada del Prosecco auf ruhigen Nebenstraßen und Wirtschaftswegen zwischen den Rebzeilen – keine Bundesstraßen. Von Refrontolo bergab nach Pieve di Soligo, dann entlang des Soligo-Bachs über Farra di Soligo. Ab Col San Martino die „Costa d'Oro" – die sonnenzugewandten Steilhänge mit den schönsten Weingärten. Über Colbertaldo nach Valdobbiadene, dann ins Cartizze-Gebiet (Guia) – der qualitative Höhepunkt des Prosecco. Ab Campea: spektakuläre Rückseite über Rolle, dann im Lierza-Tal bergab direkt am Molinetto della Croda vorbei zurück nach Refrontolo.<br><br>
+      <strong>GPX-Track:</strong> <a href="https://www.komoot.com/de-de/tour/2951786984" style="color:#2A6496;">Komoot Tour öffnen</a> – vor der Reise auf komoot.com/App speichern für Offline-Navigation.
+    </div>
+  </div>
+
+  <div class="section-label">Highlights entlang der Strecke</div>
+  <div class="highlights">
+    <div class="hl-card">
+      <img class="hl-img" src="https://images.unsplash.com/photo-1467281915248-f27c4e4b1bcf?auto=format&fit=crop&w=600&q=80" alt="Kapelle San Vigilio" loading="lazy">
+      <div class="hl-body">
+        <div class="hl-title">⛪ Cappella di San Vigilio</div>
+        <div class="hl-text">Romanische Kapelle auf einem Weinberghügel in Col San Martino. 360°-Panorama, am schönsten durch die Rebzeilen erreichbar – einer der romantischsten Orte der ganzen Proseccostraße.</div>
+      </div>
+    </div>
+    <div class="hl-card">
+      <img class="hl-img" src="https://images.unsplash.com/photo-1555990793-da11153b9a6b?auto=format&fit=crop&w=600&q=80" alt="Cartizze Weinberge" loading="lazy">
+      <div class="hl-body">
+        <div class="hl-title">★ Cartizze · Guia/Valdobbiadene</div>
+        <div class="hl-text">Der „Grand Cru" des Prosecco – nur 107 ha, aufgeteilt auf 140 Winzer. Hier kostet die Traube am meisten. Der Ausblick von oben auf das Tal mit den Dolomiten ist unvergesslich.</div>
+      </div>
+    </div>
+    <div class="hl-card">
+      <img class="hl-img" src="https://images.unsplash.com/photo-1549888834-3ec93abae044?auto=format&fit=crop&w=600&q=80" alt="Rolle Panorama" loading="lazy">
+      <div class="hl-body">
+        <div class="hl-title">🌄 Rolle · Panorama-Balkon</div>
+        <div class="hl-text">Das winzige Steinbauerndorf Rolle liegt auf einem spektakulären Balkon über dem Lierza-Tal. Perfekte Rast vor dem Abstieg zurück nach Refrontolo.</div>
+      </div>
+    </div>
+    <div class="hl-card">
+      <img class="hl-img" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=600&q=80" alt="Molinetto della Croda" loading="lazy">
+      <div class="hl-body">
+        <div class="hl-title">⚙️ Molinetto della Croda (Rückfahrt)</div>
+        <div class="hl-text">Auf dem Heimweg passiert ihr die historische Wassermühle von 1630 direkt auf der Strecke – kurzer Pflicht-Stopp für ein Foto am Wasserfall.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">🍾 Spontane Winery-Stops unterwegs</div>
+  <div class="tip tip-wine">Diese kleinen Weingüter freuen sich über spontane Besuche – einfach klingeln oder die offene Tür suchen. Ein Glas Prosecco mit Snacks, die Aussicht genießen, weiterfahren.</div>
+
+  <div class="timeline">
+    <div class="stop wine">
+      <div class="stop-time">Col San Martino · Familienkellerei</div>
+      <div class="stop-name">Cantina Riva Granda</div>
+      <div class="stop-desc">Silvias Tastinghütte direkt im Weinberg – 4,9 Sterne. Traumhafter Ausblick über die Costa d'Oro. Hausgemachter Käse und Salami dazu.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Cantina+Riva+Granda+Col+San+Martino">📍 Via Canal Vecchio 5/A, Farra di Soligo → Google Maps</a>
+      <div class="stop-meta">+39 333 461 8684 · Spontan-Besuch möglich</div>
+    </div>
+    <div class="stop wine">
+      <div class="stop-time">Solighetto/Farra · Genossenschaftskeller</div>
+      <div class="stop-name">Cantina Colli del Soligo</div>
+      <div class="stop-desc">Herzlicher Genossenschaftskeller von 1957 mit eigenem Weinshop – hier kauft man gut und günstig direkt beim Erzeuger. Walk-in-Weinshop, sehr radfahrerfreundlich.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Cantina+Colli+del+Soligo+Solighetto">📍 Via Lino Toffolin 6, Solighetto → Google Maps</a>
+      <div class="stop-meta">+39 0438 840092 · Walk-in täglich</div>
+    </div>
+    <div class="stop wine">
+      <div class="stop-time">Guia/Cartizze · Familienkellerei</div>
+      <div class="stop-name">Marsura Winery · Guia di Valdobbiadene</div>
+      <div class="stop-desc">Direkt im Cartizze-Gebiet. Ursprüngliche Kelterei mit alten Gemäuern, Prosecco ab Hof zum Einstiegspreis. Klingeln genügt – die Familie ist meistens da.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Marsura+Winery+Guia+Valdobbiadene">📍 Val de Cune, Guia di Valdobbiadene → Google Maps</a>
+    </div>
+  </div>
+
+  <div class="tip">🍽️ <strong>Abendessen auf dem Heimweg:</strong> <a href="https://maps.google.com/?q=Trattoria+Al+Molinetto+Refrontolo" style="color:#2A6496;">Trattoria Al Molinetto</a>, Refrontolo – Holzkohlegrill, Terrasse mit Weinbergblick. Fr. ab 19:30 Uhr. +39 0438 894175</div>
+</div>
+
+<!-- ═════════════════════════════════════ DAY 3 ════ -->
+<div class="section" id="day3">
+  <div class="page-header">
+    <div class="page-header-label">Tag 3 · Samstag, 23. Mai</div>
+    <div class="page-header-title">Wanderung Proseccostraße & Toffoli-Kellerführung</div>
+    <div class="page-header-sub">~11 km ab Hotel · Weinstops · Kellerführung 15:00 Uhr gebucht</div>
+    <div class="page-header-divider"></div>
+  </div>
+
+  <img class="photo-hero"
+       src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1200&q=80"
+       alt="Wanderung Weinberge" loading="lazy">
+  <p class="photo-caption">Wandern durch die UNESCO-Weinbergterrassen – mit spontanen Prosecco-Stops unterwegs</p>
+
+  <div class="route-box">
+    <div class="card-label" style="margin-bottom:0.75rem;">Routenprofil – Komoot-Wanderung Proseccostraße → Toffoli</div>
+    <div class="route-stats">
+      <div><div class="rs-value">~11 km</div><div class="rs-label">Hin + zurück</div></div>
+      <div><div class="rs-value">~320 m</div><div class="rs-label">Höhenmeter</div></div>
+      <div><div class="rs-value">3–4 Std.</div><div class="rs-label">Dauer mit Stops</div></div>
+      <div><div class="rs-value diff-med">Mittel</div><div class="rs-label">Schwierigkeit</div></div>
+    </div>
+    <div class="route-divider"></div>
+    <div class="route-waypoints">
+      <span class="wp wp-start">🏠 Hotel</span><span class="wp-arrow">→</span>
+      <span class="wp wp-mid">Via Molinetto</span><span class="wp-arrow">→</span>
+      <span class="wp wp-highlight">⚙️ Molinetto della Croda</span><span class="wp-arrow">→</span>
+      <span class="wp wp-mid">Sentiero delle Vigne</span><span class="wp-arrow">→</span>
+      <span class="wp wp-winery">🍾 Winery-Stops</span><span class="wp-arrow">→</span>
+      <span class="wp wp-highlight">🍾 Toffoli 15:00</span><span class="wp-arrow">→</span>
+      <span class="wp wp-start">🏠 Hotel</span>
+    </div>
+    <div class="route-divider"></div>
+    <div class="route-chart"><canvas id="ec2" role="img" aria-label="Höhenprofil Wanderung"></canvas></div>
+    <div class="route-divider"></div>
+    <div class="route-desc">
+      <strong>Start direkt beim Hotel – zu Fuß, kein Transfer nötig.</strong><br><br>
+      Von Via Vittoria 46 nordwärts auf der Via Molinetto (~2,5 km flach). Dann weiter auf dem <strong>Sentiero delle Vigne</strong> – dem offiziellen Weinberg-Wanderweg der Prosecco-Region, beschildert mit Weinblatt-Symbolen – durch die steilen Terrassen nach San Pietro di Feletto und zurück. Das Ziel Toffoli liegt ~3 km vom Hotel und ist auf dem Rückweg perfekt eingeplant für die gebuchte Führung um 15:00 Uhr.<br><br>
+      <strong>Komoot-Route:</strong> <a href="https://www.komoot.com/de-de/tour/2951627694" style="color:#2A6496;">Tour ansehen und auf App speichern</a>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="stop">
+      <div class="stop-time">09:30 – Start</div>
+      <div class="stop-name">Direkt beim Hotel · Via Vittoria 46</div>
+      <div class="stop-desc">Zu Fuß nordwärts auf der Via Molinetto. Gleich nach dem Ort beginnt die UNESCO-Landschaft: Reihen um Reihen von Rebstöcken auf steilen Terrassen, dazwischen alte Steinmauern – Ciglioni-Bewirtschaftung seit dem Mittelalter.</div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~10:15 – Pflicht-Stopp</div>
+      <div class="stop-name">Molinetto della Croda · Historische Wassermühle (1630)</div>
+      <div class="stop-desc">Erbaut 1630, direkt in den Felsen gebaut – ein 12-Meter-Wasserfall treibt das Rad an. Eine der schönsten historischen Mühlen Italiens. Sa. 10–12:30 Uhr geöffnet, Eintritt 3–4 €.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Molinetto+della+Croda+Refrontolo">📍 Via Molinetto 40, Refrontolo → Google Maps</a>
+      <img class="stop-img" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80" alt="Historische Wassermühle" loading="lazy">
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~11:00 – Aufstieg durch die Weinberge</div>
+      <div class="stop-name">Sentiero delle Vigne · San Pietro di Feletto</div>
+      <div class="stop-desc">Der Weg führt auf dem offiziellen Prosecco-Wanderweg durch die Weinbergterrassen von Refrontolo Richtung San Pietro di Feletto. Dabei passiert ihr die romanische Pfarrkirche (11. Jh.) mit mittelalterlichen Fresken, die als erste überhaupt Weinbau und Weinlese abbilden. Kurzer Stopp unbedingt!</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Chiesa+San+Pietro+di+Feletto+TV">📍 San Pietro di Feletto → Google Maps</a>
+    </div>
+
+    <div class="stop wine">
+      <div class="stop-time">~12:00 – Spontane Winery-Stops unterwegs</div>
+      <div class="stop-name">🍾 Kleine Weingüter auf der Proseccostraße</div>
+      <div class="stop-desc">Entlang der Route findet ihr mehrere kleine Familienkellereien, bei denen man einfach klingeln kann. Besonders schön: <strong>Azienda Agricola Bressan</strong> (Monica, Farra di Soligo, +39 347 110 4124 – sehr freundlich, kleine Terrasse) und <strong>Vigneto Canova</strong> an der Strada del Prosecco. Ein Glas Prosecco mit ein paar Snacks in den Weinbergen – kein Touristenrummel, echter Kontakt.</div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~13:00 – Mittagspause</div>
+      <div class="stop-name">Jause in den Weinbergen</div>
+      <div class="stop-desc">An irgendeinem Aussichtspunkt: mitgebrachte Jause aus dem Hotel, oder ein spontaner Einkauf am Morgen bei einer Bäckerei in Refrontolo. Prosciutto-Reste, Käse, Brot – und die Aussicht ist das Restaurant.</div>
+    </div>
+
+    <div class="stop green">
+      <div class="stop-time">15:00 Uhr · <span class="badge badge-booked">✓ Gebucht</span></div>
+      <div class="stop-name">Prosecco Toffoli · Kellerführung mit Verkostung</div>
+      <div class="stop-desc">Familienweingut direkt in Refrontolo, geführt von den Brüdern Sante und Vincenzo Toffoli – 4,8 Sterne. Die Führung umfasst den Weinkeller, die Weinberganlage und eine Verkostung mehrerer Proseccos. Das Highlight: der legendäre <strong>„Drunken Cheese"</strong> – in Prosecco eingelegter lokaler Käse, der die Verkostung abrundet. Alles auf Englisch verfügbar, persönliche Atmosphäre, kein Touristenprogramm.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Toffoli+Prosecco+Refrontolo">📍 Via Liberazione 26, Refrontolo → Google Maps</a>
+      <div class="stop-meta">+39 0438 978204 · Führung 15:00 Uhr bestätigt</div>
+      <img class="stop-img" src="https://images.unsplash.com/photo-1567521464027-f127ff144326?auto=format&fit=crop&w=800&q=80" alt="Prosecco Weinkeller" loading="lazy">
+    </div>
+
+    <div class="stop wine">
+      <div class="stop-time">~17:00 – Optional</div>
+      <div class="stop-name">Liessi Col del Moìn · Zweite Verkostung</div>
+      <div class="stop-desc">Falls noch Lust: Giuseppe Liessi führt persönlich, sein <strong>Refrontolo Passito</strong> (seltener Süßwein aus halbgetrockneten Trauben) ist eine regionale Rarität – nur hier zu kaufen. Sa. ab 17 Uhr.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Liessi+Col+del+Moin+Refrontolo">📍 Via Molino Crevada 1, Refrontolo → Google Maps</a>
+      <div class="stop-meta">+39 347 520 8961</div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">Ab ~20:00 Uhr</div>
+      <div class="stop-name">🥂 Abend im Hotel ausklingen lassen</div>
+      <div class="stop-desc">Nach der Toffoli-Führung habt ihr sicher ein paar Flaschen dabei. Die kühlt ihr und genießt sie im Garten – Käse, Prosciutto-Reste, Toffoli-Prosecco. Kein Restaurant, kein Plan – einfach der schönste Abend der Reise.</div>
+    </div>
+  </div>
+
+  <div class="tip tip-wine">🍾 <strong>Einkauftipp:</strong> Bei Toffoli unbedingt den <em>Rive di Refrontolo DOCG</em> (Lagenprosecco von ihren eigenen Hängen) und wenn möglich den Passito von Liessi mitnehmen – beides gibt es nur vor Ort!</div>
+</div>
+
+<!-- ═════════════════════════════════════ DAY 4 ════ -->
+<div class="section" id="day4">
+  <div class="page-header">
+    <div class="page-header-label">Tag 4 · Sonntag, 24. Mai</div>
+    <div class="page-header-title">Cison di Valmarino & letzter Abend</div>
+    <div class="page-header-sub">Via dei Mulini · Mittelalterliches Dorf · Pizza · Abschluss 🥂</div>
+    <div class="page-header-divider"></div>
+  </div>
+
+  <img class="photo-hero"
+       src="https://images.unsplash.com/photo-1549888834-3ec93abae044?auto=format&fit=crop&w=1200&q=80"
+       alt="Cison di Valmarino" loading="lazy">
+  <p class="photo-caption">Cison di Valmarino – eines der schönsten mittelalterlichen Dörfer Italiens mit Burg Castelbrando</p>
+
+  <div class="route-box">
+    <div class="card-label" style="margin-bottom:0.75rem;">Routenprofil – Via dei Mulini · Cison di Valmarino</div>
+    <div class="route-stats">
+      <div><div class="rs-value">6,1 km</div><div class="rs-label">Distanz</div></div>
+      <div><div class="rs-value">247 m</div><div class="rs-label">Höhenmeter</div></div>
+      <div><div class="rs-value">2–2,5 Std.</div><div class="rs-label">Dauer</div></div>
+      <div><div class="rs-value diff-easy">Leicht</div><div class="rs-label">Schwierigkeit</div></div>
+    </div>
+    <div class="route-divider"></div>
+    <div class="route-chart"><canvas id="ec3" role="img" aria-label="Höhenprofil Via dei Mulini"></canvas></div>
+    <div class="route-divider"></div>
+    <div class="route-desc"><strong>Start: Parkplatz unter Burg Castelbrando</strong> (Via Serenissima 20, ~20 Min. mit Auto ab Hotel). Gut beschilderter Rundweg entlang des Rujo-Bachs vorbei an rekonstruierten Wassermühlen, Skulpturen und kleinen Wasserfällen. Komfortable Turnschuhe genügen. Option: Aufstieg zur Castelbrando-Burg mit Rückkehr per Standseilbahn. 4,7 ★ bei über 600 Bewertungen.</div>
+  </div>
+
+  <div class="timeline">
+    <div class="stop blue">
+      <div class="stop-time">~10:00 – Anfahrt ~20 Min.</div>
+      <div class="stop-name">Cison di Valmarino · „Borghi più belli d'Italia"</div>
+      <div class="stop-desc">Offiziell eines der schönsten Dörfer Italiens, dominiert von der mächtigen Burg Castelbrando. Parken unter der Burg, Kaffee im Bar Biorka.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Via+Serenissima+20+Cison+di+Valmarino">📍 Parkplatz Via Serenissima 20 → Google Maps</a>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~10:30 – Wanderung</div>
+      <div class="stop-name">Via dei Mulini (Sentiero del Rujo)</div>
+      <div class="stop-desc">Vom Piazza di Cison über die steinerne Brücke Ponte dei Sassi. Der Pfad folgt dem Rujo-Bach durch ein bewaldetes Tal vorbei an rekonstruierten Wassermühlen, Skulpturen und kleinen Wasserfällen. Das Rauschen des Bachs begleitet euch den ganzen Weg – sehr entspannend nach den aktiven Tagen.</div>
+      <img class="stop-img" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80" alt="Wasserfall Bachtal" loading="lazy">
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~11:30</div>
+      <div class="stop-name">Bosco delle Penne Mozze</div>
+      <div class="stop-desc">Stiller Gedenkwald: für jeden gefallenen Alpini-Soldaten aus der Provinz Treviso ein Baum und eine Stele. Berührend und würdevoll.</div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~12:15 – Optional</div>
+      <div class="stop-name">Burg Castelbrando · Standseilbahn zurück</div>
+      <div class="stop-desc">Kurzer Aufstieg für den Panoramablick – Rückkehr per Standseilbahn. Ein kleines Vergnügen!</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Castelbrando+Cison+di+Valmarino">📍 Castelbrando → Google Maps</a>
+    </div>
+
+    <div class="stop">
+      <div class="stop-time">~13:00 – Aperitivo</div>
+      <div class="stop-name">Dorfbummel & Aperol Spritz auf der Piazza</div>
+      <div class="stop-desc">Kopfsteinpflaster, mittelalterliche Torbögen, kleine Caffès. Der verdiente Aperitivo vor dem Rückweg nach Refrontolo.</div>
+    </div>
+
+    <div class="stop wine">
+      <div class="stop-time">~18:30 Uhr</div>
+      <div class="stop-name">🍕 Alla Tripolitania · Pizza-Abend</div>
+      <div class="stop-desc">Große Terrasse unter einem 40 Jahre alten Feigenbaum, Weinbergpanorama, Pizza aus dem Holzofen und lokale Küche. Das perfekte letzte Abendessen.</div>
+      <a class="stop-link" href="https://maps.google.com/?q=Alla+Tripolitania+Refrontolo">📍 Via Mire Basse 38, Refrontolo → Google Maps</a>
+      <div class="stop-meta">+39 0438 894112 · So ab 18:30 Uhr · Reservierung empfohlen</div>
+    </div>
+
+    <div class="stop wine">
+      <div class="stop-time">~20:30 Uhr</div>
+      <div class="stop-name">🥂 Abschlussabend im Garten · Toast auf die Jubilarin!</div>
+      <div class="stop-desc">Prosciutto aus San Daniele · Toffoli Rive di Refrontolo DOCG · Passito von Liessi · Käse vom Markt · 50 Kerzen, ein Glas und ein herzliches Danke für das gemeinsame Abenteuer!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ RESERVIERUNGEN ════ -->
+<div class="section" id="reservations">
+  <div class="page-header">
+    <div class="page-header-label">Checkliste</div>
+    <div class="page-header-title">Reservierungen & Kontakte</div>
+    <div class="page-header-divider"></div>
+  </div>
+
+  <div class="tip tip-warm">📋 Die wichtigsten Buchungen sind bereits erledigt! Nur noch Alla Tripolitania für den letzten Abend anrufen.</div>
+
+  <div class="card">
+    <div class="card-label" style="margin-bottom:0.75rem;">Buchungsstatus</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Was</th><th>Wann</th><th>Kontakt</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>🥩 Prosciutto-Verkostung · Alberti 1906</td><td>Do. 21. Mai, 12:30</td><td>+39 0432 957422</td><td class="status-ok">✓ Gebucht</td></tr>
+          <tr><td>🚲 E-Bikes vom Hotel</td><td>Fr. 22. Mai, ganztags</td><td>Hotel</td><td class="status-ok">✓ Gebucht</td></tr>
+          <tr><td>🍾 Kellerführung · Prosecco Toffoli</td><td>Sa. 23. Mai, 15:00</td><td>+39 0438 978204</td><td class="status-ok">✓ Gebucht</td></tr>
+          <tr><td>🍕 Alla Tripolitania · Pizza</td><td>So. 24. Mai, ~18:30</td><td>+39 0438 894112</td><td class="status-call">Anrufen!</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-label" style="margin-bottom:0.75rem;">Alle Adressen & Kontakte</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Ort</th><th>Adresse</th><th>Tel.</th></tr></thead>
+        <tbody>
+          <tr><td>🏡 Unterkunft</td><td>Via Vittoria 46, 31020 Refrontolo</td><td>–</td></tr>
+          <tr><td>🥩 Alberti 1906 San Daniele</td><td>Via Teobaldo Ciconi 24, San Daniele</td><td>+39 0432 957422</td></tr>
+          <tr><td>🍾 Cantina Riva Granda</td><td>Via Canal Vecchio 5/A, Farra di Soligo</td><td>+39 333 461 8684</td></tr>
+          <tr><td>🍾 Cantina Colli del Soligo</td><td>Via Lino Toffolin 6, Solighetto</td><td>+39 0438 840092</td></tr>
+          <tr><td>🍾 Prosecco Toffoli</td><td>Via Liberazione 26, Refrontolo</td><td>+39 0438 978204</td></tr>
+          <tr><td>🍾 Liessi Col del Moìn</td><td>Via Molino Crevada 1, Refrontolo</td><td>+39 347 520 8961</td></tr>
+          <tr><td>⚙️ Molinetto della Croda</td><td>Via Molinetto 40, Refrontolo</td><td>molinettodellacroda.it</td></tr>
+          <tr><td>🍕 Alla Tripolitania</td><td>Via Mire Basse 38, Refrontolo</td><td>+39 0438 894112</td></tr>
+          <tr><td>🍖 Trattoria Al Molinetto</td><td>Via Molinetto 1, Refrontolo</td><td>+39 0438 894175</td></tr>
+          <tr><td>🏰 Cison / Castelbrando</td><td>Via Serenissima 20, Cison di Valmarino</td><td>castelbrando.it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-label">Nützliche Links</div>
+  <div class="card">
+    <div class="link-list">
+      <a class="card-link" href="https://www.komoot.com/de-de/tour/2951786984">🚲 Komoot: E-Bike Rundkurs Proseccostraße (GPS-Track)</a>
+      <a class="card-link" href="https://www.komoot.com/de-de/tour/2951627694">🌿 Komoot: Wanderung Proseccostraße → Toffoli (GPS-Track)</a>
+      <a class="card-link" href="https://www.visitproseccohills.it/en/e-bike-tour-of-the-unesco-hills">🌐 Visit Prosecco Hills – offizielle E-Bike Routen</a>
+      <a class="card-link" href="https://www.prosecco.it/en/area-of-origin/wine-tourism-itineraries/">🍾 Prosecco.it – Weinrouten & Wineries</a>
+      <a class="card-link" href="https://www.molinettodellacroda.it">⚙️ Molinetto della Croda – Öffnungszeiten</a>
+      <a class="card-link" href="https://maps.google.com/?q=Via+Vittoria+46,+31020+Refrontolo+TV,+Italy">📍 Unterkunft auf Google Maps</a>
+    </div>
+  </div>
+
+  <div class="tip tip-info" style="margin-top:1rem;">📱 <strong>App-Tipp vor der Reise:</strong> Komoot-App installieren und beide GPS-Tracks (E-Bike + Wanderung) herunterladen – dann könnt ihr auch ohne Internet-Empfang offline navigieren. Kein GPS verlieren in den Weinbergen!</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-title">🥂 Herzlichen Glückwunsch zum 50. Geburtstag!</div>
+  <div class="footer-text">
+    Unterkunft: Via Vittoria 46 · 31020 Refrontolo (TV)<br>
+    Anreise ab 14:00 Uhr · Abreise bis 10:00 Uhr<br>
+    Abfahrt Linz: 7:00–7:30 Uhr
+  </div>
+  <div class="footer-small">Gute Reise · Buon viaggio · An die Proseccostraße! 🍾</div>
+</div>
+
+</div><!-- /page -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// Navigation
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const map = {overview:0,day1:1,day2:2,day3:3,day4:4,reservations:5};
+  document.querySelectorAll('.nav-btn')[map[id]].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(initCharts, 100);
+}
+
+// Elevation Charts
+const gc = 'rgba(0,0,0,0.05)', tc = 'rgba(0,0,0,0.35)';
+const drawn = {};
+
+function mkChart(id, data, color) {
+  const el = document.getElementById(id);
+  if (!el || drawn[id]) return;
+  drawn[id] = true;
+  const n = data.length;
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels: data.map((_,i) => i===0?'Start':i===n-1?'Ziel':''),
+      datasets: [{
+        data, borderColor: color,
+        backgroundColor: color.replace(')', ', 0.12)').replace('rgb','rgba'),
+        borderWidth: 2.5, fill: true, tension: 0.42, pointRadius: 0
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: gc }, ticks: { color: tc, font: { size: 10 }, maxTicksLimit: 5 } },
+        y: { grid: { color: gc }, ticks: { color: tc, font: { size: 10 }, callback: v => v+'m' }, min: 80 }
+      }
+    }
+  });
+}
+
+function initCharts() {
+  // E-Bike: Refrontolo→Pieve→Soligo→Farra→ColSanM→Colbertaldo→Valdobbiadene→Guia→Cartizze→Campea→Rolle→Lierza→Molinetto→Refrontolo
+  mkChart('ec1',
+    [200,175,145,120,115,118,125,145,175,200,230,265,295,315,345,380,355,305,260,225,205,200],
+    'rgb(74,155,111)');
+  // Wanderung: Hotel→Molinetto→Weinberge→San Pietro→Toffoli→zurück
+  mkChart('ec2',
+    [180,178,175,172,180,192,205,225,255,280,310,320,300,275,245,220,200,185,180],
+    'rgb(201,168,76)');
+  // Via dei Mulini Cison
+  mkChart('ec3',
+    [110,118,130,148,172,205,248,290,310,295,260,218,172,140,115],
+    'rgb(74,103,65)');
+}
+
+// Init charts for first visible section
+initCharts();
+
+// Lazy-load images with fade-in
+document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+  img.style.transition = 'opacity 0.4s';
+  img.style.opacity = '0';
+  if (img.complete) {
+    img.style.opacity = '1';
+  } else {
+    img.onload = () => { img.style.opacity = '1'; };
+    img.onerror = () => { img.style.opacity = '0.3'; img.style.background = '#d8e8c8'; };
+  }
+});
+</script>
+</body>
+</html>
